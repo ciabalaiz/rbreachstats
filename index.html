@@ -1,67 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>SCP Faction Win Chart</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SCP Game Stats</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    canvas { max-width: 600px; }
+    body {
+      background-color: #1e1e1e;
+      color: #f0f0f0;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 1rem;
+    }
+    h1, h2 {
+      color: #ffffff;
+    }
+    canvas {
+      background-color: #2a2a2a;
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    ul#log-list {
+      margin-top: 2rem;
+      padding-left: 1rem;
+      list-style: none;
+    }
+    ul#log-list li {
+      background-color: #2a2a2a;
+      border-left: 5px solid #4caf50;
+      padding: 0.75rem 1rem;
+      margin: 0.5rem 0;
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+    .winner {
+      color: #4caf50;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
-  <h1>Winning Faction Distribution</h1>
-  <canvas id="factionChart" width="600" height="600"></canvas>
+  <h1>📊 SCP Round Win Stats</h1>
+  <canvas id="myChart" width="400" height="400"></canvas>
 
-  <script>
-    async function loadFactionWins() {
-      const response = await fetch('logs.json');
-      const logs = await response.json();
+  <h2>📄 Logs</h2>
+  <ul id="log-list"></ul>
 
-      const winCounts = {};
-
-      logs.forEach(log => {
-        if (!winCounts[log]) winCounts[log] = 0;
-        winCounts[log]++;
-      });
-
-      const labels = Object.keys(winCounts);
-      const data = Object.values(winCounts);
-
-      const ctx = document.getElementById('factionChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'pie',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Wins',
-            data: data,
-            backgroundColor: [
-              'rgba(75, 192, 192, 0.6)',
-              'rgba(255, 99, 132, 0.6)',
-              'rgba(255, 205, 86, 0.6)',
-              'rgba(153, 102, 255, 0.6)',
-              'rgba(54, 162, 235, 0.6)',
-              'rgba(201, 203, 207, 0.6)'
-            ],
-            borderColor: 'white',
-            borderWidth: 2
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: { position: 'right' },
-            title: {
-              display: true,
-              text: 'Which Faction Wins the Most?'
-            }
-          }
-        }
-      });
-    }
-
-    loadFactionWins();
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="index.js"></script>
 </body>
 </html>

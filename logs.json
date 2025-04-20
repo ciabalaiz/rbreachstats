@@ -1,23 +1,17 @@
 [
-  "Foundation",
-  "Anomalies",
-  "Anomalies",
-  "Counter",
-  "Foundation",
-  "Anomalies",
-  "Counter",
-  "Counter",
-  "Anomalies",
-  "Foundation",
-  "Foundation",
-  "Foundation",
-  "Foundation",
-  "Foundation",
-  "Foundation",
-  "Foundation",
-  "Foundation",
-  "GOC",
-  "Foundation",
-  "Counter",
-  "Foundation"
+  {
+    "players": 30,
+    "winner": "Foundation",
+    "points": 50
+  },
+  {
+    "players": 30,
+    "winner": "Counter",
+    "points": 40
+  },
+  {
+    "players": 30,
+    "winner": "Anomalies",
+    "points": 45
+  }
 ]

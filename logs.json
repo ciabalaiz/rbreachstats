@@ -1,17 +1,29 @@
 [
   {
     "players": 30,
-    "winner": "Foundation",
-    "points": 50
-  },
-  {
-    "players": 30,
-    "winner": "Counter",
-    "points": 40
-  },
-  {
-    "players": 30,
     "winner": "Anomalies",
-    "points": 45
+    "points": 33,
+    "winner2": "Foundation",
+    "points2": 24,
+    "scps" : ["096", "457"],
+    "spawnwaves" : ["Foundation", "Anomalies"]
+  },
+  {
+    "players": 22,
+    "winner": "Counter",
+    "points": 50,
+    "winner2": "Foundation",
+    "points2": 33,
+    "scps" : ["173", "457"],
+    "spawnwaves" : ["Foundation", "FoundatCounterion"]
+  },
+  {
+    "players": 28,
+    "winner": "Foundation",
+    "points": 45,
+    "winner2": "Counter",
+    "points2": 35,
+    "scps" : ["966", "049"],
+    "spawnwaves" : ["Foundation", "Counter"]
   }
 ]

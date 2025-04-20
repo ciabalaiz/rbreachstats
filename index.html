@@ -21,17 +21,8 @@
       const winCounts = {};
 
       logs.forEach(log => {
-        const winnerMatch = log.match(/\):\s*([^–-]+)/); // gets text after "): " and before "-"
-        if (winnerMatch) {
-          let winners = winnerMatch[1]
-            .split(",") // in case of comma-separated factions
-            .map(w => w.trim());
-
-          winners.forEach(winner => {
-            if (!winCounts[winner]) winCounts[winner] = 0;
-            winCounts[winner]++;
-          });
-        }
+        if (!winCounts[log]) winCounts[log] = 0;
+        winCounts[log]++;
       });
 
       const labels = Object.keys(winCounts);

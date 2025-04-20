@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SCP Faction Win Chart</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    canvas { max-width: 600px; }
+  </style>
+</head>
+<body>
+  <h1>Winning Faction Distribution</h1>
+  <canvas id="factionChart" width="600" height="600"></canvas>
+
+  <script>
+    async function loadFactionWins() {
+      const response = await fetch('logs.json');
+      const logs = await response.json();
+
+      const winCounts = {};
+
+      logs.forEach(log => {
+        const winnerMatch = log.match(/\):\s*([^–-]+)/); // gets text after "): " and before "-"
+        if (winnerMatch) {
+          let winners = winnerMatch[1]
+            .split(",") // in case of comma-separated factions
+            .map(w => w.trim());
+
+          winners.forEach(winner => {
+            if (!winCounts[winner]) winCounts[winner] = 0;
+            winCounts[winner]++;
+          });
+        }
+      });
+
+      const labels = Object.keys(winCounts);
+      const data = Object.values(winCounts);
+
+      const ctx = document.getElementById('factionChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Wins',
+            data: data,
+            backgroundColor: [
+              'rgba(75, 192, 192, 0.6)',
+              'rgba(255, 99, 132, 0.6)',
+              'rgba(255, 205, 86, 0.6)',
+              'rgba(153, 102, 255, 0.6)',
+              'rgba(54, 162, 235, 0.6)',
+              'rgba(201, 203, 207, 0.6)'
+            ],
+            borderColor: 'white',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'right' },
+            title: {
+              display: true,
+              text: 'Which Faction Wins the Most?'
+            }
+          }
+        }
+      });
+    }
+
+    loadFactionWins();
+  </script>
+</body>
+</html>

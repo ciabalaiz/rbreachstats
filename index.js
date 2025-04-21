@@ -3,26 +3,55 @@ const factionLogos = {
     "Foundation": "images/factions/Foundation.png",
     "Counter": "images/factions/Counter.png",
     "GOC": "images/factions/GOC.png"
-  };
+};
+
+function nameFix(name) {
+    name = name.toLowerCase()
+    var current = "";
+
+    if (name == "ntf" || name == "mtf" || name == "tacrep" || name == "foundation") {
+        current = "Foundation";
+    } else if (name == "sh" || name == "serpenthand" || name == "anomalies") {
+        current = "Anomalies"
+    } else  if (name == "ci" || name == "chaosinsurency" || name == "counter") {
+        current = "Counter"
+    } else {
+        current = "Foundation"
+    } 
+
+    return current
+}
+
+function convertSpawnwaves(spawnwaves) {
+    var newSpawnwave = [];
+
+    spawnwaves.forEach(wave => {
+        newSpawnwave.push(nameFix(wave))
+    })
+
+    return newSpawnwave
+  }
   
-  // Render function for the round log list
-  function renderLogList(logs) {
+function renderLogList(logs) {
     const logListContainer = document.getElementById("log-list");
-  
+    var i = 0
+
     logs.forEach(log => {
-      // Get round data
-      const winner = log.winner;
-      const winner2 = log.winner2;
-      const points = log.points;
-      const points2 = log.points2;
+      const winner = nameFix(log.winner);
+      var winner2 = nameFix(log.winner2);
+      const points = log.points || 50;
+      const points2 = log.points2 || 40;
       const scps = log.scps;
-      const spawnwaves = log.spawnwaves;
+      const spawnwaves = convertSpawnwaves(log.spawnwaves);
       
       const pointDifference = Math.abs(points - points2);
   
       const listItem = document.createElement("li");
       listItem.classList.add("log-item");
-      
+    
+
+      i = i + 1
+
       listItem.innerHTML = `
         <div class="log-item-header">
           <img src="${factionLogos[winner]}" alt="${winner} Logo">
@@ -37,14 +66,13 @@ const factionLogos = {
           <p><strong>Spawnwaves:</strong> ${spawnwaves.join(", ")}</p>
         </div>
         <div class="log-item-footer">
-          <span>Round log details</span>
+          <span>"${"Round log "+i}"</span>
         </div>
       `;
       
-      // Append the item to the list
       logListContainer.appendChild(listItem);
     });
-  }
+}
 
 function renderSCPChart(logs) {
     const scpStats = {};
@@ -98,23 +126,42 @@ function renderSCPChart(logs) {
         }
       }
     });
-  }
+}
 
-
-fetch('logs.json')
-  .then(res => res.json())
-  .then(data => {
+function renderSpawnwaves(data) {
     const chartData = {};
-    const logList = document.getElementById('log-list');
 
     data.forEach((entry, index) => {
-      const { winner, points, players } = entry;
+      var { spawnwaves } = entry;
 
-      // Count winners
+      spawnwaves.forEach(wave => {
+        wave = nameFix(wave)
+        chartData[wave] = (chartData[wave] || 0) + 1;
+      })     
+    });
+    
+    const ctx = document.getElementById('spawnwaveChart').getContext('2d');
+    
+    new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: Object.keys(chartData),
+        datasets: [{
+          data: Object.values(chartData),
+          backgroundColor: ['#4caf50', '#f44336', '#2196f3', '#ff9800']
+        }]
+      }
+    });
+}
+
+function renderFactionWinrate(data) {
+    const chartData = {};
+
+    data.forEach((entry, index) => {
+      const { winner } = entry;
       chartData[winner] = (chartData[winner] || 0) + 1;
     });
 
-    // Pie chart
     const ctx = document.getElementById('myChart').getContext('2d');
     new Chart(ctx, {
       type: 'pie',
@@ -126,11 +173,14 @@ fetch('logs.json')
         }]
       }
     });
+}
 
-    //Log List Render (each round data)
 
+fetch('logs.json')
+  .then(res => res.json())
+  .then(data => {
+    renderSpawnwaves(data)
+    renderFactionWinrate(data)
     renderLogList(data)
-
-    //SCP Chart (winrates)
     renderSCPChart(data)
-  });
+});
